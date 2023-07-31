@@ -10,7 +10,7 @@ from lists import forms, views
 
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.home_page, name='home'),
     path('admin/', admin.site.urls),
     path('login/',
          LoginView.as_view
