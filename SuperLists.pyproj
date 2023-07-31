@@ -81,8 +81,6 @@
     <Content Include="lists\static\lists\scripts\respond.js" />
     <Content Include="lists\static\lists\scripts\respond.min.js" />
     <Content Include="lists\static\lists\scripts\_references.js" />
-    <Content Include="lists\templates\lists\about.html" />
-    <Content Include="lists\templates\lists\contact.html" />
     <Content Include="lists\templates\lists\index.html" />
     <Content Include="lists\templates\lists\layout.html" />
     <Content Include="lists\templates\lists\login.html" />
