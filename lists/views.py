@@ -7,5 +7,5 @@ from django.shortcuts import HttpResponse, render
 #from django.http import HttpRequest
 
 def home_page(request):
-    return HttpResponse('<html><title>To-Do list</title></html>')
+    return render(request, 'lists/home.html')
 
