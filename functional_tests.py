@@ -33,7 +33,8 @@ class NewVisitorTest(unittest.TestCase):
         #Generator expression that generates values on-the-fly as you iterate through them
         #Similiar to a list comprehension but uses () not []
         self.assertTrue(
-            any(row.text == '1: Buy ferret food' for row in rows)
+            any(row.text == '1: Buy ferret food' for row in rows),
+            "New to-do item did not appear in table"
             )
 
 
