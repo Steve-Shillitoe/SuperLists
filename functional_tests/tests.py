@@ -31,7 +31,7 @@ class NewVisitorTest(LiveServerTestCase):
                 time.sleep(0.5)
 
         
-    def test_can_start_a_list_and_retrieve_it_later(self):
+    def test_can_start_a_list_for_one_user(self):
         self.browser.get(self.live_server_url)
         self.assertIn('To-Do', self.browser.title)
 
@@ -42,20 +42,55 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertEqual(inputbox.get_attribute('placeholder'),
                          'Enter a to-do item')
 
+        #User enters a to-do item
         inputbox.send_keys('Buy ferret food')
         inputbox.send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table('1: Buy ferret food')
 
+        #user enters a second to-do item
         inputbox = self.browser.find_element(By.ID, 'id_new_item')
         inputbox.send_keys('Feed ferrets')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-
-        #Generator expression that generates values on-the-fly as you iterate through them
-        #Similiar to a list comprehension but uses () not []
-        self.wait_for_row_in_list_table('1: Buy ferret food')
         self.wait_for_row_in_list_table('2: Feed ferrets')
 
-        self.fail('Finish the test!')
+    
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        #user starts a new to-do list
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Buy ferret food')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy ferret food')
+        
+        #user notices that their list has a unique URL
+        first_user_list_url = self.browser.current_url
+        self.assertRegex(first_user_list_url, '/lists/.+')
 
+        # A second user comes to the website
+        ## We use a new browser session to ensure no information is
+        ## coming through from the first user
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+
+        #Second user visits the home page. There is no sign of the first user's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
+        self.assertNotIn('Buy ferret food', page_text)
+        self.assertNotIn('Feed ferrets', page_text)
+
+        #Second user starts a new list
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Buy cat food')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy cat food')
+
+        #Second user gets their own unique url
+        second_user_list_url = self.browser.current_url
+        self.assertRegex(second_user_list_url, '/lists/.+')
+        self.assertNotEqual(second_user_list_url, first_user_list_url)
+
+        #Check there is still no trace of first user's list
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
+        self.assertNotIn('Buy ferret food', page_text)
+        self.assertIn('Buy cat food', page_text)
 
