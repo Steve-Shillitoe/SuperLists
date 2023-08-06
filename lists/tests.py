@@ -30,20 +30,20 @@ class HomePageTest(TestCase):
         self.assertEqual(new_item.text, 'A new list item')
 
 
-    def test_redirects_after_POST_request(self):
+    def test_redirects_after_POST(self):
         response = self.client.post('/', data={'item_text':'A new list item'})
-
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/the-only-list-in-the-world/')
+
 
     def test_displays_all_list_items(self):
         Item.objects.create(text='item1')
         Item.objects.create(text='item2')
 
-        response = self.client.get('/')
+        response = self.client.get('/lists/the-only-list-in-the-world/')
 
-        self.assertIn('item1', response.content.decode())
-        self.assertIn('item2', response.content.decode())
+        self.assertContains(response, 'item1' )
+        self.assertContains(response, 'item2' )
 
 
 class ItemModelTest(TestCase):

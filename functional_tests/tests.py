@@ -7,7 +7,7 @@ from django.test import LiveServerTestCase
 import time
 import unittest
 
-MAX_WIAT = 10
+MAX_WAIT = 10
 
 class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
@@ -26,7 +26,7 @@ class NewVisitorTest(LiveServerTestCase):
                 self.assertIn(row_text, [row.text for row in rows])
                 return
             except(AssertionError, WebDriverException) as e:
-                if time.time - start_time > MAX_WIAT:
+                if time.time - start_time > MAX_WAIT:
                     raise e
                 time.sleep(0.5)
 
