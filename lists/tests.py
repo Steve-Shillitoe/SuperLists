@@ -36,7 +36,8 @@ class HomePageTest(TestCase):
         self.assertEqual(response['location'], '/lists/the-only-list-in-the-world/')
 
 
-    def test_displays_all_list_items(self):
+class ListViewTest(TestCase):
+    def test_displays_all_items(self):
         Item.objects.create(text='item1')
         Item.objects.create(text='item2')
 
@@ -44,6 +45,12 @@ class HomePageTest(TestCase):
 
         self.assertContains(response, 'item1' )
         self.assertContains(response, 'item2' )
+
+
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list-in-the-world/')
+        self.assertTemplateUsed(response, 'lists/list.html')
+
 
 
 class ItemModelTest(TestCase):
