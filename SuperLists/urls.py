@@ -11,6 +11,6 @@ from lists import urls as list_urls
 urlpatterns = [
     path('', list_views.home_page, name='home'),
     path('admin/', admin.site.urls),
-    path('lists/', include(list_urls)),
+    path('', include(list_urls)),
    
 ]
